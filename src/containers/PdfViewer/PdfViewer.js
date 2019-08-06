@@ -21,7 +21,7 @@ class PdfViewer extends Component {
         if (this.state.selectedFile != null) {
             return (
                 <Wrap>
-                    <div>Preview PDF</div>
+                    <div>Preview of PDF</div>
                     <Document
                         file={this.state.selectedFile}
                     >
