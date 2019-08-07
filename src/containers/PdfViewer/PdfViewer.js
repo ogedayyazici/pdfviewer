@@ -58,6 +58,7 @@ class PdfViewer extends Component {
         })
     }
 
+
     render() {
 
         if (this.state.selectedFile != null) {
@@ -76,7 +77,7 @@ class PdfViewer extends Component {
                         file={this.state.selectedFile}
                         onLoadSuccess={this.onDocumentLoadSuccess}
                     >
-                        <Page pageNumber={this.state.pageNumber} scale={this.state.scale} />
+                        <Page pageNumber={this.state.pageNumber} scale={this.state.scale} onLoadSuccess={() => removeTextLayerOffset()} />
                     </Document>
                 </Wrap>
             )
@@ -89,6 +90,16 @@ class PdfViewer extends Component {
             )
         }
     }
+}
+
+function removeTextLayerOffset() {
+    const textLayers = document.querySelectorAll(".react-pdf__Page__textContent");
+    textLayers.forEach(layer => {
+        const { style } = layer;
+        style.top = "0";
+        style.left = "0";
+        style.transform = "";
+    });
 }
 
 
