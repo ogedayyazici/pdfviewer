@@ -30,6 +30,14 @@ class PdfViewer extends Component {
         })
     }
 
+    removePDF = remove => {
+        this.setState({
+            selectedFile: remove.null,
+            options: [],
+            pageNumber: 1
+        })
+    }
+
     pageSelected = selected => {
         this.setState({
             pageNumber: selected.value
@@ -41,18 +49,19 @@ class PdfViewer extends Component {
         if (this.state.selectedFile != null) {
             return (
                 <Wrap>
+                    <ul>
+                        <Dropdown options={this.state.options}
+                            onChange={this.pageSelected}
+                            placeholder="Select a page" />
+                        <button onClick={this.removePDF}>Remove PDF</button>
 
-                    <Dropdown options={this.state.options}
-                        onChange={this.pageSelected}
-                        placeholder="Select a page" />
-
-                    <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
-
+                        <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
+                    </ul>
                     <Document
                         file={this.state.selectedFile}
                         onLoadSuccess={this.onDocumentLoadSuccess}
                     >
-                        <Page pageNumber={this.state.pageNumber} />
+                        <Page pageNumber={this.state.pageNumber} scale={1} />
                     </Document>
                 </Wrap>
             )
