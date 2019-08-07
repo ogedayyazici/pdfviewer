@@ -13,6 +13,8 @@ class PdfViewer extends Component {
         selectedFile: null,
         options: [],
         value: 1,
+        scale: 1,
+        zoomCons: 0.5
     }
 
     onDocumentLoadSuccess = ({ numPages }) => {
@@ -38,6 +40,18 @@ class PdfViewer extends Component {
         })
     }
 
+    zoomIn = zoomIn => {
+        this.setState({
+            scale: this.state.scale + this.state.zoomCons
+        })
+    }
+
+    zoomOut = zoomOut => {
+        this.setState({
+            scale: this.state.scale - this.state.zoomCons
+        })
+    }
+
     pageSelected = selected => {
         this.setState({
             pageNumber: selected.value
@@ -54,14 +68,15 @@ class PdfViewer extends Component {
                             onChange={this.pageSelected}
                             placeholder="Select a page" />
                         <button onClick={this.removePDF}>Remove PDF</button>
-
-                        <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
+                        <button onClick={this.zoomIn}>+</button>
+                        <button onClick={this.zoomOut}>-</button>
                     </ul>
+                    <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
                     <Document
                         file={this.state.selectedFile}
                         onLoadSuccess={this.onDocumentLoadSuccess}
                     >
-                        <Page pageNumber={this.state.pageNumber} scale={1} />
+                        <Page pageNumber={this.state.pageNumber} scale={this.state.scale} />
                     </Document>
                 </Wrap>
             )
