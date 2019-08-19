@@ -1,0 +1,14 @@
+.Highlight {
+    height: 15px;
+    width: 100px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: hsl(61, 93%, 47%);;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 90;
+}

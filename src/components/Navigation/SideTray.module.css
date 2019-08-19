@@ -1,0 +1,14 @@
+.SideTray {
+    height: 100%;
+    width: 40%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #8a8f8c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 90;
+}
