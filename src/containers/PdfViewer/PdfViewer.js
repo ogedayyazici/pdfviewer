@@ -5,6 +5,7 @@ import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 import Checkbox from '../../components/Checkbox'
 import SideTray from '../../components/Navigation/SideTray';
+import Highlight from '../../components/Highlight';
 
 
 
@@ -15,12 +16,50 @@ class PdfViewer extends Component {
         pageNumber: 1,
         selectedFile: null,
         options: [],
+        annotations: [],
         value: 1,
         scale: 1,
         zoomCons: 0.5,
         checked: false,
-        renderTray: false
+        renderTray: false,
+        highlightRect: null,
     }
+
+
+    handleHighlightRect = ({ annotation }) => {
+
+        this.setState({
+            highlightRect: annotation.rect[0]
+        });
+        console.log(this.state.highlightRect)
+
+    };
+
+    renderHighlight = ({ annotations }) => {
+
+        console.log(annotations[0].rect)
+
+        return (
+            <div>
+                {annotations.map(annotation => (
+
+
+                    <Highlight className="Highlight" key={annotation.id} annotation={annotation}>
+
+                    </Highlight>
+
+                ))}
+            </div>
+        )
+
+
+    };
+
+    PullAnnotations = (annotations) => {
+        this.setState({ annotations: annotations });
+        console.log(annotations)
+    };
+
 
     onDocumentLoadSuccess = ({ numPages }) => {
         this.setState({ numPages });
@@ -33,9 +72,9 @@ class PdfViewer extends Component {
 
     handleCheckboxChange = event => {
         this.setState({
-            checked: event.target.checked,
+            checked: !this.state.checked,
         })
-        console.log("Checked");
+        console.log("Checked change");
     }
 
     fileSelected = event => {
@@ -77,15 +116,18 @@ class PdfViewer extends Component {
     }
 
 
+
     render() {
 
         if (this.state.selectedFile != null) {
             return (
                 <div>
                     <div>
-                        <Dropdown options={this.state.options}
-                            onChange={this.pageSelected}
-                            placeholder="Select a page" />
+                        <div style={{ width: '60%' }}>
+                            <Dropdown options={this.state.options}
+                                onChange={this.pageSelected}
+                                placeholder="Select a page" />
+                        </div>
                         <button onClick={this.removePDF}>Remove PDF</button>
 
                         <label>
@@ -111,11 +153,24 @@ class PdfViewer extends Component {
                         file={this.state.selectedFile}
                         onLoadSuccess={this.onDocumentLoadSuccess}
                     >
-                        <Page pageNumber={this.state.pageNumber} scale={this.state.scale}
-                            onLoadSuccess={() => removeTextLayerOffset()}
-                            renderAnnotationLayer={this.state.checked}
-                            onGetAnnotationsSuccess={this.onGetAnnotationsHandle}
-                        />
+                        <div>
+                            <Page pageNumber={this.state.pageNumber} scale={this.state.scale}
+                                onLoadSuccess={() => removeTextLayerOffset()}
+                                renderAnnotationLayer={this.state.checked}
+                                onGetAnnotationsSuccess={this.PullAnnotations}
+                                renderInteractiveForms={false}
+
+                            >
+                                {this.state.checked && this.state.annotations.length > 0 ? (
+                                    this.renderHighlight(this.state)
+                                ) : (null)}
+
+                            </Page>
+
+
+
+                        </div>
+
                     </Document>
 
                     <div>
@@ -137,11 +192,13 @@ class PdfViewer extends Component {
                 </div>
             )
         }
+
     }
 }
 
 function removeTextLayerOffset() {
     const textLayers = document.querySelectorAll(".react-pdf__Page__textContent");
+    return
     textLayers.forEach(layer => {
         const { style } = layer;
         style.top = "0";
@@ -149,5 +206,9 @@ function removeTextLayerOffset() {
         style.transform = "";
     });
 }
+
+
+
+
 
 export default PdfViewer;
