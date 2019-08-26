@@ -23,6 +23,24 @@ class PdfViewer extends Component {
         checked: false,
         renderTray: false,
         highlightRect: null,
+        details: null,
+        selectedHighlight: null
+    }
+
+    selectHighlight = ({ annotation }) => {
+
+        this.setState({
+            selectedHighlight: annotation,
+            renderTray: true
+        });
+        console.log(annotation)
+
+    };
+
+    renderTrayHandler = () => {
+        this.setState({
+            renderTray: !this.state.renderTray
+        });
     }
 
 
@@ -31,29 +49,32 @@ class PdfViewer extends Component {
         this.setState({
             highlightRect: annotation.rect[0]
         });
-        console.log(this.state.highlightRect)
+
 
     };
 
     renderHighlight = ({ annotations }) => {
 
-        console.log(annotations[0].rect)
+
 
         return (
             <div>
                 {annotations.map(annotation => (
 
+                    <div>
+                        <Highlight className="Highlight" key={annotation.id}
+                            annotation={annotation}
+                            onClick={() => this.selectHighlight({ annotation })}>
 
-                    <Highlight className="Highlight" key={annotation.id} annotation={annotation}>
-
-                    </Highlight>
-
+                        </Highlight>
+                    </div>
                 ))}
             </div>
         )
 
 
     };
+
 
     PullAnnotations = (annotations) => {
         this.setState({ annotations: annotations });
@@ -109,11 +130,7 @@ class PdfViewer extends Component {
         })
     }
 
-    handleTrayRender = selected => {
-        this.setState({
-            renderTray: !this.state.renderTray
-        })
-    }
+
 
 
 
@@ -142,9 +159,6 @@ class PdfViewer extends Component {
                                 onChange={this.handleCheckboxChange}
                             />
                             <span>Fillable Elements</span>
-                        </label>
-                        <label>
-                            <button onClick={this.handleTrayRender}>Side Tray </button>
                         </label>
 
                     </div>
@@ -175,7 +189,7 @@ class PdfViewer extends Component {
 
                     <div>
                         {this.state.renderTray ? (
-                            <SideTray> </SideTray>
+                            <SideTray renderTrayHandler={this.renderTrayHandler} annotation={this.state.selectedHighlight}> </SideTray>
                         ) : (
                                 null
                             )}
@@ -198,7 +212,7 @@ class PdfViewer extends Component {
 
 function removeTextLayerOffset() {
     const textLayers = document.querySelectorAll(".react-pdf__Page__textContent");
-    return
+    //return
     textLayers.forEach(layer => {
         const { style } = layer;
         style.top = "0";
