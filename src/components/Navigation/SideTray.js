@@ -7,8 +7,12 @@ const SideTray = (props) => {
 
         <header className={classes.SideTray}>
 
+
+
             <ul>
+
                 <div style={{ display: "flex" }}>
+                    <div>Annotation count: {props.Counter}</div>
                     <button style={{ marginLeft: "auto" }} onClick={props.renderTrayHandler}>Clear</button>
                 </div>
 
@@ -17,7 +21,7 @@ const SideTray = (props) => {
                 <pre>Field Name: {props.annotation.fieldName}</pre>
                 <pre>Subtype: {props.annotation.subtype}</pre>
             </ul>
-        </header >)
+        </header>)
 };
 
 export default SideTray;

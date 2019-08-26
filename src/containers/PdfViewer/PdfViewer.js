@@ -189,7 +189,7 @@ class PdfViewer extends Component {
 
                     <div>
                         {this.state.renderTray ? (
-                            <SideTray renderTrayHandler={this.renderTrayHandler} annotation={this.state.selectedHighlight}> </SideTray>
+                            <SideTray Counter={this.state.annotations.length} renderTrayHandler={this.renderTrayHandler} annotation={this.state.selectedHighlight}> </SideTray>
                         ) : (
                                 null
                             )}
