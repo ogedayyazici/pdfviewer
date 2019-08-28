@@ -237,10 +237,11 @@ class PdfViewer extends Component {
 
                     <div>
                         {this.state.renderTray ? (
-                            <SideTray AnnotationCounter={this.state.annotations.length}
-                                TextCounter={this.state.texts.length}
+                            <SideTray annotationCounter={this.state.annotations.length}
+                                textCounter={this.state.texts.length}
                                 clearTrayData={this.clearTrayData}
-                                trayData={this.state.trayData}>
+                                trayData={this.state.trayData}
+                            >
                             </SideTray>
                         ) : (
                                 null

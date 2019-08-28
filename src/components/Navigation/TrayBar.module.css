@@ -1,0 +1,18 @@
+.TrayBar {
+    height: 56px;
+    width: 40%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #555252;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    box-sizing: border-box;
+    z-index: 110;
+}
+
+.TrayBar nav {
+    height: 100%;
+}
