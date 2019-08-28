@@ -5,8 +5,7 @@ import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 import Checkbox from '../../components/Checkbox'
 import SideTray from '../../components/Navigation/SideTray';
-import Highlight from '../../components/Highlight';
-
+import { Highlight, TextHighlight } from '../../components/Highlight';
 
 
 class PdfViewer extends Component {
@@ -17,23 +16,33 @@ class PdfViewer extends Component {
         selectedFile: null,
         options: [],
         annotations: [],
+        texts: [],
         value: 1,
         scale: 1,
         zoomCons: 0.5,
         checked: false,
+        textChecked: false,
         renderTray: false,
         highlightRect: null,
         details: null,
-        selectedHighlight: null
+        trayData: []
     }
 
-    selectHighlight = ({ annotation }) => {
-
+    selectAnnotation = ({ annotation }) => {
         this.setState({
-            selectedHighlight: annotation,
+            trayData: this.state.trayData.concat(annotation),
             renderTray: true
-        });
+        })
         console.log(annotation)
+
+    };
+
+    selectText = ({ text }) => {
+        this.setState({
+            trayData: this.state.trayData.concat(text),
+            renderTray: true
+        })
+        console.log(text)
 
     };
 
@@ -41,6 +50,12 @@ class PdfViewer extends Component {
         this.setState({
             renderTray: !this.state.renderTray
         });
+    }
+
+    clearTrayData = () => {
+        this.setState({
+            trayData: []
+        })
     }
 
 
@@ -55,8 +70,6 @@ class PdfViewer extends Component {
 
     renderHighlight = ({ annotations }) => {
 
-
-
         return (
             <div>
                 {annotations.map(annotation => (
@@ -64,21 +77,40 @@ class PdfViewer extends Component {
                     <div>
                         <Highlight className="Highlight" key={annotation.id}
                             annotation={annotation}
-                            onClick={() => this.selectHighlight({ annotation })}>
-
+                            onClick={() => this.selectAnnotation({ annotation })}>
                         </Highlight>
                     </div>
                 ))}
             </div>
         )
+    };
 
+    renderTextHighlight = ({ texts }) => {
 
+        return (
+            <div>
+                {texts.map(text => (
+
+                    <div>
+                        <TextHighlight className="TextHighlight" TextKey={text.id}
+                            text={text}
+                            onClick={() => this.selectText({ text })}>
+                        </TextHighlight>
+                    </div>
+                ))}
+            </div>
+        )
     };
 
 
     PullAnnotations = (annotations) => {
         this.setState({ annotations: annotations });
         console.log(annotations)
+    };
+
+    PullTexts = (texts) => {
+        this.setState({ texts: texts });
+        console.log(texts)
     };
 
 
@@ -94,6 +126,13 @@ class PdfViewer extends Component {
     handleCheckboxChange = event => {
         this.setState({
             checked: !this.state.checked,
+        })
+        console.log("Checked change");
+    }
+
+    textCheckboxChange = event => {
+        this.setState({
+            textChecked: !this.state.textChecked,
         })
         console.log("Checked change");
     }
@@ -132,8 +171,6 @@ class PdfViewer extends Component {
 
 
 
-
-
     render() {
 
         if (this.state.selectedFile != null) {
@@ -161,6 +198,14 @@ class PdfViewer extends Component {
                             <span>Fillable Elements</span>
                         </label>
 
+                        <label>
+                            <Checkbox
+                                textChecked={this.state.textChecked}
+                                onChange={this.textCheckboxChange}
+                            />
+                            <span>Text Elements</span>
+                        </label>
+
                     </div>
                     <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
                     <Document
@@ -172,6 +217,7 @@ class PdfViewer extends Component {
                                 onLoadSuccess={() => removeTextLayerOffset()}
                                 renderAnnotationLayer={this.state.checked}
                                 onGetAnnotationsSuccess={this.PullAnnotations}
+                                onGetTextSuccess={this.PullTexts}
                                 renderInteractiveForms={false}
 
                             >
@@ -179,9 +225,11 @@ class PdfViewer extends Component {
                                     this.renderHighlight(this.state)
                                 ) : (null)}
 
+                                {this.state.textChecked ? (
+                                    this.renderTextHighlight(this.state)
+                                ) : (null)}
+
                             </Page>
-
-
 
                         </div>
 
@@ -189,12 +237,15 @@ class PdfViewer extends Component {
 
                     <div>
                         {this.state.renderTray ? (
-                            <SideTray Counter={this.state.annotations.length} renderTrayHandler={this.renderTrayHandler} annotation={this.state.selectedHighlight}> </SideTray>
+                            <SideTray AnnotationCounter={this.state.annotations.length}
+                                TextCounter={this.state.texts.length}
+                                clearTrayData={this.clearTrayData}
+                                trayData={this.state.trayData}>
+                            </SideTray>
                         ) : (
                                 null
                             )}
                     </div>
-
 
                 </div>
             )

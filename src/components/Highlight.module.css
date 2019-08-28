@@ -6,3 +6,11 @@
    white-space: pre; 
    position: absolute;
 }
+
+.TextHighlight {
+    opacity: 0.5; 
+   background: #f82991; 
+   color: transparent; 
+   white-space: pre; 
+   position: absolute;
+}

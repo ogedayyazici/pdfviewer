@@ -19,7 +19,22 @@ const Highlight = (props) => {
     )
 };
 
+const TextHighlight = (props) => {
+    return (
+        <header
+            style={{
+                left: props.text.transform[4] + xCor,
+                bottom: props.text.transform[5] + yCor,
+                height: props.text.height,
+                width: props.text.width,
+            }}
+            className={classes.TextHighlight}
+            onClick={props.onClick}>
+        </header>
+    )
+};
 
 
 
-export default Highlight;
+
+export { Highlight, TextHighlight }; 
