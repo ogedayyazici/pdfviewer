@@ -10,5 +10,5 @@
     align-items: center;
     box-sizing: border-box;
     z-index: 90;
-    overflow-y: scroll;
+    overflow-y: auto;
 }

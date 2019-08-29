@@ -22,6 +22,7 @@ class PdfViewer extends Component {
         zoomCons: 0.5,
         checked: false,
         textChecked: false,
+        formsChecked: false,
         renderTray: false,
         highlightRect: null,
         details: null,
@@ -127,14 +128,19 @@ class PdfViewer extends Component {
         this.setState({
             checked: !this.state.checked,
         })
-        console.log("Checked change");
     }
 
     textCheckboxChange = event => {
         this.setState({
             textChecked: !this.state.textChecked,
         })
-        console.log("Checked change");
+    }
+
+    formsCheckboxChange = event => {
+        this.setState({
+            formsChecked: !this.state.formsChecked,
+            checked: false,
+        })
     }
 
     fileSelected = event => {
@@ -200,10 +206,18 @@ class PdfViewer extends Component {
 
                         <label>
                             <Checkbox
-                                textChecked={this.state.textChecked}
+                                checked={this.state.textChecked}
                                 onChange={this.textCheckboxChange}
                             />
                             <span>Text Elements</span>
+                        </label>
+
+                        <label>
+                            <Checkbox
+                                checked={this.state.formChecked}
+                                onChange={this.formsCheckboxChange}
+                            />
+                            <span>Interactive Forms</span>
                         </label>
 
                     </div>
@@ -215,10 +229,10 @@ class PdfViewer extends Component {
                         <div>
                             <Page pageNumber={this.state.pageNumber} scale={this.state.scale}
                                 onLoadSuccess={() => removeTextLayerOffset()}
-                                renderAnnotationLayer={this.state.checked}
+                                renderAnnotationLayer={true}
                                 onGetAnnotationsSuccess={this.PullAnnotations}
                                 onGetTextSuccess={this.PullTexts}
-                                renderInteractiveForms={false}
+                                renderInteractiveForms={this.state.formsChecked}
 
                             >
                                 {this.state.checked && this.state.annotations.length > 0 ? (

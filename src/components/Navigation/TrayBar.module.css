@@ -8,9 +8,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
     box-sizing: border-box;
     z-index: 110;
+    
 }
 
 .TrayBar nav {

@@ -2,17 +2,19 @@ import React from 'react';
 import classes from './SideTray.module.css';
 import TrayBar from './TrayBar';
 
+
+
+
 const SideTray = (props) => {
     console.log(props.trayData)
-
 
     return (
         <div>
             <TrayBar clearTrayData={props.clearTrayData}
                 annotationCounter={props.annotationCounter}
                 textCounter={props.textCounter}>
-
             </TrayBar>
+
             <header className={classes.SideTray}>
                 <ul>
                     {props.trayData.map(data => {
@@ -52,19 +54,16 @@ const SideTray = (props) => {
                                             {"\n"} 4: {data.transform[4]}
                                             {"\n"} 5: {data.transform[5]}
                                         </pre>
-
                                     </ul>
                                 }
                             </div>
                         )
                     })
                     }
-
                 </ul>
             </header>
         </div>
     )
-
 }
 
 
