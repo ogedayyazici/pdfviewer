@@ -2,9 +2,9 @@
     height: 100%;
     width: 40%;
     position: fixed;
-    top: 0;
+    top: 56px;
     right: 0;
-    background-color: #a7a7a7;
+    background-color: #c7c5c5;
     display: flex;
     justify-content: space-between;
     align-items: center;

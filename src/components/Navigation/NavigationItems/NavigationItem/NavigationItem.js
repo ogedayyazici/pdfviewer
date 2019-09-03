@@ -1,11 +1,10 @@
 import React from 'react';
 
 const navigationItems = (props) => (
-    <li>
-        <a
-            href={props.link}>
-            {props.children}</a>
-    </li>
+
+    <h1 href={props.link}
+        style={{ color: "#9b4dca" }}>
+        {props.children}</h1>
 );
 
 export default navigationItems;

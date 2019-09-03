@@ -7,6 +7,7 @@ import Checkbox from '../../components/Checkbox'
 import SideTray from '../../components/Navigation/SideTray';
 import { Grid, VertGrid } from '../../components/Grid';
 import { Highlight, TextHighlight } from '../../components/Highlight';
+import classes from './PdfViewer.module.css'
 
 
 class PdfViewer extends Component {
@@ -20,7 +21,7 @@ class PdfViewer extends Component {
         texts: [],
         value: 1,
         scale: 1,
-        zoomCons: 0.5,
+        zoomCons: 0.2,
         checked: false,
         textChecked: false,
         formsChecked: false,
@@ -59,7 +60,8 @@ class PdfViewer extends Component {
 
     clearTrayData = () => {
         this.setState({
-            trayData: []
+            trayData: [],
+            renderTray: false
         })
     }
 
@@ -231,19 +233,22 @@ class PdfViewer extends Component {
             return (
                 <div>
                     <div>
-                        <div style={{ width: '60%' }}>
+                        <div className={classes.Toolbar}>
                             <Dropdown options={this.state.options}
                                 onChange={this.pageSelected}
-                                placeholder="Select a page" />
+                                placeholder="Select a page"
+                            />
+                            <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
+
+                            <label>
+                                <button className={classes.buttonSmall} onClick={this.zoomIn}>+</button>
+                                <span> Zoom </span>
+                                <button className={classes.buttonSmall} onClick={this.zoomOut}>-</button>
+                            </label>
+                            <button onClick={this.removePDF}>Remove PDF</button>
                         </div>
-                        <button onClick={this.removePDF}>Remove PDF</button>
-
-                        <label>
-                            <button onClick={this.zoomIn}>+</button>
-                            <span>Zoom</span>
-                            <button onClick={this.zoomOut}>-</button>
-                        </label>
-
+                    </div>
+                    <div className={classes.Toolbar2}>
                         <label>
                             <Checkbox
                                 checked={this.state.checked}
@@ -251,7 +256,6 @@ class PdfViewer extends Component {
                             />
                             <span>Fillable Elements</span>
                         </label>
-
                         <label>
                             <Checkbox
                                 checked={this.state.textChecked}
@@ -259,7 +263,6 @@ class PdfViewer extends Component {
                             />
                             <span>Text Elements</span>
                         </label>
-
                         <label>
                             <Checkbox
                                 checked={this.state.formChecked}
@@ -283,9 +286,9 @@ class PdfViewer extends Component {
                                 <button onClick={this.decreaseSpace}>-</button>
                             </label>
                         ) : (null)}
-
                     </div>
-                    <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
+
+
                     <Document
                         file={this.state.selectedFile}
                         onLoadSuccess={this.onDocumentLoadSuccess}
@@ -297,7 +300,6 @@ class PdfViewer extends Component {
                                 onGetAnnotationsSuccess={this.PullAnnotations}
                                 onGetTextSuccess={this.PullTexts}
                                 renderInteractiveForms={this.state.formsChecked}
-                                width={613}
                             >
                                 {this.state.checked && this.state.annotations.length > 0 ? (
                                     this.renderHighlight(this.state)
@@ -336,12 +338,12 @@ class PdfViewer extends Component {
                             )}
                     </div>
 
-                </div>
+                </div >
             )
         } else {
             return (
                 <div>
-                    <div>Upload PDF</div>
+                    <h4>Upload PDF</h4>
                     <input type="file" name="userfile" onChange={this.fileSelected} />
                 </div>
             )

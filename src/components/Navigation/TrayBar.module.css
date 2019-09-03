@@ -4,13 +4,13 @@
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #555252;
+    background-color: #606c76;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 20px;
     box-sizing: border-box;
     z-index: 110;
-    
 }
 
 .TrayBar nav {
