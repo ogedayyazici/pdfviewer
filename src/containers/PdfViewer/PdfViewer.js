@@ -5,6 +5,7 @@ import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 import Checkbox from '../../components/Checkbox'
 import SideTray from '../../components/Navigation/SideTray';
+import { Grid, VertGrid } from '../../components/Grid';
 import { Highlight, TextHighlight } from '../../components/Highlight';
 
 
@@ -23,10 +24,13 @@ class PdfViewer extends Component {
         checked: false,
         textChecked: false,
         formsChecked: false,
+        gridChecked: false,
         renderTray: false,
         highlightRect: null,
         details: null,
-        trayData: []
+        trayData: [],
+        start: 10,
+        gridSpace: 0,
     }
 
     selectAnnotation = ({ annotation }) => {
@@ -69,12 +73,50 @@ class PdfViewer extends Component {
 
     };
 
+    increaseSpace = () => {
+        this.setState({
+            gridSpace: this.state.gridSpace + 10
+        })
+    }
+
+    decreaseSpace = () => {
+        this.setState({
+            gridSpace: this.state.gridSpace - 10
+        })
+    }
+
+    renderGrid = (input) => {
+        let i = input;
+        if (i <= 859) {
+            return (
+                <div>
+                    <Grid className="Grid" top={i}>
+                    </Grid>
+                    {this.renderGrid(i + 50 + this.state.gridSpace)}
+                </div>
+            )
+        }
+    }
+
+    renderVertGrid = (input) => {
+        let i = input;
+        if (i <= 613) {
+            return (
+                <div>
+                    <VertGrid className="VertGrid" left={i}>
+                    </VertGrid>
+                    {this.renderVertGrid(i + 70 + this.state.gridSpace)}
+                </div>
+            )
+        }
+    }
+
+
     renderHighlight = ({ annotations }) => {
 
         return (
             <div>
                 {annotations.map(annotation => (
-
                     <div>
                         <Highlight className="Highlight" key={annotation.id}
                             annotation={annotation}
@@ -140,6 +182,12 @@ class PdfViewer extends Component {
         this.setState({
             formsChecked: !this.state.formsChecked,
             checked: false,
+        })
+    }
+
+    gridCheckboxChange = event => {
+        this.setState({
+            gridChecked: !this.state.gridChecked
         })
     }
 
@@ -220,6 +268,22 @@ class PdfViewer extends Component {
                             <span>Interactive Forms</span>
                         </label>
 
+                        <label>
+                            <Checkbox
+                                checked={this.state.gridChecked}
+                                onChange={this.gridCheckboxChange}
+                            />
+                            <span>Grid Lines</span>
+                        </label>
+
+                        {this.state.gridChecked ? (
+                            <label>
+                                <button onClick={this.increaseSpace}>+</button>
+                                <span>Grid Space</span>
+                                <button onClick={this.decreaseSpace}>-</button>
+                            </label>
+                        ) : (null)}
+
                     </div>
                     <div>Page {this.state.pageNumber} out of {this.state.numPages}</div>
                     <Document
@@ -233,7 +297,7 @@ class PdfViewer extends Component {
                                 onGetAnnotationsSuccess={this.PullAnnotations}
                                 onGetTextSuccess={this.PullTexts}
                                 renderInteractiveForms={this.state.formsChecked}
-
+                                width={613}
                             >
                                 {this.state.checked && this.state.annotations.length > 0 ? (
                                     this.renderHighlight(this.state)
@@ -243,8 +307,18 @@ class PdfViewer extends Component {
                                     this.renderTextHighlight(this.state)
                                 ) : (null)}
 
-                            </Page>
+                                {this.state.gridChecked ? (
+                                    this.renderGrid(this.state.start)
+                                ) : (null)}
 
+                                {this.state.gridChecked ? (
+                                    this.renderVertGrid(this.state.start)
+                                ) : (null)}
+
+
+
+
+                            </Page>
                         </div>
 
                     </Document>
@@ -278,7 +352,6 @@ class PdfViewer extends Component {
 
 function removeTextLayerOffset() {
     const textLayers = document.querySelectorAll(".react-pdf__Page__textContent");
-    //return
     textLayers.forEach(layer => {
         const { style } = layer;
         style.top = "0";

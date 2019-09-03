@@ -3,8 +3,6 @@ import classes from './SideTray.module.css';
 import TrayBar from './TrayBar';
 
 
-
-
 const SideTray = (props) => {
     console.log(props.trayData)
 
