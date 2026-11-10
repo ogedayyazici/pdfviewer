@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
-import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import Dropdown from 'react-dropdown'
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import DropdownModule from 'react-dropdown'
 import 'react-dropdown/style.css'
 import Checkbox from '../../components/Checkbox'
 import SideTray from '../../components/Navigation/SideTray';
 import { Grid, VertGrid } from '../../components/Grid';
 import { Highlight, TextHighlight } from '../../components/Highlight';
 import classes from './PdfViewer.module.css'
+
+// react-dropdown 1.x is CommonJS; unwrap its default export under Vite.
+const Dropdown = DropdownModule.default || DropdownModule;
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+).toString();
 
 
 class PdfViewer extends Component {
@@ -153,9 +162,9 @@ class PdfViewer extends Component {
         console.log(annotations)
     };
 
-    PullTexts = (texts) => {
-        this.setState({ texts: texts });
-        console.log(texts)
+    PullTexts = ({ items }) => {
+        this.setState({ texts: items });
+        console.log(items)
     };
 
 
@@ -299,7 +308,7 @@ class PdfViewer extends Component {
                                 renderAnnotationLayer={true}
                                 onGetAnnotationsSuccess={this.PullAnnotations}
                                 onGetTextSuccess={this.PullTexts}
-                                renderInteractiveForms={this.state.formsChecked}
+                                renderForms={this.state.formsChecked}
                             >
                                 {this.state.checked && this.state.annotations.length > 0 ? (
                                     this.renderHighlight(this.state)
